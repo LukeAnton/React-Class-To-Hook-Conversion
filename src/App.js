@@ -1,26 +1,52 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Fragment, useState, useEffect } from "react";
+import axios from "axios";
+import CardList from "./components/card-list/CardList";
 
-function App() {
+import "./App.css";
+
+const App = () => {
+  const [monsters, setMonsters] = useState([
+    {
+      name: "Frankenstein",
+      id: "1"
+    },
+    {
+      name: "Dracula",
+      id: "2"
+    },
+    {
+      name: "Zombie",
+      id: "3"
+    }
+  ]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(
+          "https://jsonplaceholder.typicode.com/users"
+        );
+        setMonsters(res.data);
+      } catch (err) {
+        console.log("error");
+      }
+    };
+    fetchData();
+    // eslint-disable-next-line
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Fragment>
+      <div className="App">
+        <CardList>
+          {monsters.map(monster => (
+            <p key={monster.id}>{monster.name}</p>
+          ))}
+        </CardList>
+        <p />
+      </div>
+    </Fragment>
   );
-}
+};
 
 export default App;
