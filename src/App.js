@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect } from "react";
 import axios from "axios";
 import CardList from "./components/card-list/CardList";
-
+import SearchBox from "./components/search-box/SearchBox";
 import "./App.css";
 
 const App = () => {
@@ -19,6 +19,7 @@ const App = () => {
       id: "3"
     }
   ]);
+  const [searchField, setSearchField] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,17 +33,23 @@ const App = () => {
       }
     };
     fetchData();
+
     // eslint-disable-next-line
   }, []);
+  console.log(searchField);
+
+  const filteredMonsters = monsters.filter(monster =>
+    monster.name.toLowerCase().includes(searchField.toLowerCase())
+  );
 
   return (
     <Fragment>
       <div className="App">
-        <CardList>
-          {monsters.map(monster => (
-            <p key={monster.id}>{monster.name}</p>
-          ))}
-        </CardList>
+        <SearchBox
+          placeholder="search peeps"
+          handleChange={e => setSearchField(e.target.value)}
+        />
+        <CardList monsters={filteredMonsters} />
         <p />
       </div>
     </Fragment>
